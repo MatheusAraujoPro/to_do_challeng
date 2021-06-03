@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
 import { TodoInput } from '../components/TodoInput';
+import { useTheme, Theme } from '../configurations/Context';
 
 interface Task {
   id: number;
@@ -12,6 +13,7 @@ interface Task {
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const {theme, setTheme} = useTheme()
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task if it's not empty
@@ -44,6 +46,13 @@ export function Home() {
 
   }
 
+  function handleTheme(value: Boolean){
+   value ? setTheme(Theme.Dark): setTheme(Theme.Default)
+   console.log('O tema escolhid o foi:', theme);
+   
+   
+  }
+
   function handleRemoveTask(id: number) {     
     setTasks(oldValue => oldValue.filter((task =>
       task.id !== id
@@ -52,7 +61,9 @@ export function Home() {
 
   return (
     <>
-      <Header />
+      <Header
+        onChangeTheme={handleTheme}
+      />
 
       <TodoInput addTask={handleAddTask} />
 
