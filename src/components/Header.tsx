@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Switch
 } from 'react-native';
+import { DarkTheme } from '../configurations/Themes'
 
 interface HeaderProps { 
   onChangeTheme: (value: Boolean) => void;  
@@ -13,7 +14,7 @@ interface HeaderProps {
 
 export function Header({ onChangeTheme }: HeaderProps) {
 
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false); 
 
   const toggleSwitch = () =>{
     setIsEnabled(previousState => !previousState);
@@ -21,7 +22,9 @@ export function Header({ onChangeTheme }: HeaderProps) {
   } 
 
   return (
-    <View style={styles.header}>   
+    <View style={[
+      styles.header, isEnabled && {backgroundColor: DarkTheme.header}
+      ]}>   
       <Text style={styles.headerText}>to.</Text>
       <Text style={[styles.headerText, { fontFamily: 'Poppins-SemiBold' }]}>do</Text>
       <Switch

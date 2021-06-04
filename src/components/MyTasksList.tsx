@@ -1,10 +1,15 @@
 import React from 'react';
 import { FlatList, TouchableOpacity, View, Text, StyleSheet, FlatListProps } from 'react-native';
+import { DarkTheme } from '../configurations/Themes';
 
-function FlatListHeaderComponent() {
+interface theme{
+  theme: Boolean
+}
+
+function FlatListHeaderComponent({theme} : theme) {
   return (
     <View>
-      <Text style={styles.header}>Minhas tasks</Text>
+      <Text style={[styles.header, theme && {color: DarkTheme.title}]}>Minhas tasks</Text>
     </View>
   )
 }
@@ -15,11 +20,12 @@ interface MyTasksListProps {
     title: string;
     done: boolean;
   }[];
+  isDark: Boolean
   onPress: (id: number) => void;
   onLongPress: (id: number) => void;
 }
 
-export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
+export function MyTasksList({ tasks, isDark, onLongPress, onPress }: MyTasksListProps) {
   return (
     <FlatList
       data={tasks}
@@ -34,15 +40,17 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
             //TODO - use onPress, onLongPress and style props
             style={[
               styles.taskButton,
-              item.done && styles.taskButtonDone,
-              
+              item.done && styles.taskButtonDone,  
+              item.done && isDark && {backgroundColor: DarkTheme.containerDescription}                          
             ]}
           >
             <View 
               testID={`marker-${index}`}
               style={[
                 styles.taskMarker,
-                item.done && styles.taskMarkerDone
+                item.done && styles.taskMarkerDone,
+                item.done && isDark &&  {backgroundColor: DarkTheme.select},
+                isDark &&  {borderColor: DarkTheme.select}
                 
               ]}
               //TODO - use style prop 
@@ -51,8 +59,11 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
               //TODO - use style prop
               style={[
                 styles.taskText,
-                item.done && styles.taskTextDone
-                
+                item.done && styles.taskTextDone, 
+                isDark && {color: DarkTheme.textDescription},
+                item.done && isDark && {backgroundColor: DarkTheme.containerDescription},
+                item.done && isDark && {color: DarkTheme.textDoneDescription},
+               
               ]}
             >
               {item.title}
@@ -60,7 +71,7 @@ export function MyTasksList({ tasks, onLongPress, onPress }: MyTasksListProps) {
           </TouchableOpacity>
         )
       }}
-      ListHeaderComponent={<FlatListHeaderComponent />}
+      ListHeaderComponent={<FlatListHeaderComponent theme={isDark}/>}
       ListHeaderComponentStyle={{
         marginBottom: 20
       }}

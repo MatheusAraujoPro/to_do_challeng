@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 
 export enum Theme {
     Dark = 'Dark',
-    Default = 'Default',
+    Default = 'Default'
 }
 
 export type ThemeContextType = {

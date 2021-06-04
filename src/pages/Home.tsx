@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Dimensions, View } from 'react-native';
 
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
@@ -12,8 +13,9 @@ interface Task {
 }
 
 export function Home() {
+  const { theme, setTheme } = useTheme();
   const [tasks, setTasks] = useState<Task[]>([]);
-  const {theme, setTheme} = useTheme()
+  const [isDark, setIsDark] = useState<Boolean>(theme === Theme.Default);
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task if it's not empty
@@ -26,9 +28,7 @@ export function Home() {
       }
 
       setTasks(oldValue => [...oldValue, data]);
-    } else{
-      //TODO - Send alert tp user if Task's Name was Empty.      
-    }
+    } 
   }
 
   function handleMarkTaskAsDone(id: number) {
@@ -36,8 +36,8 @@ export function Home() {
     let arr = []
     arr = tasks
 
-    arr.forEach((task) =>{
-      if(task.id === id){
+    arr.forEach((task) => {
+      if (task.id === id) {
         task.done = !task.done
       }
     })
@@ -46,32 +46,39 @@ export function Home() {
 
   }
 
-  function handleTheme(value: Boolean){
-   value ? setTheme(Theme.Dark): setTheme(Theme.Default)
-   console.log('O tema escolhid o foi:', theme);
-   
-   
+  function handleTheme(value: Boolean) {
+    value ? setTheme(Theme.Dark) : setTheme(Theme.Default)
+    setIsDark(!value)
   }
 
-  function handleRemoveTask(id: number) {     
+  function handleRemoveTask(id: number) {
     setTasks(oldValue => oldValue.filter((task =>
       task.id !== id
-    )))   
-  } 
+    )))
+  }
 
+  
   return (
-    <>
+    <View style={[
+      { height: Dimensions.get('window').height },
+      isDark && { backgroundColor: '#1F1F1F' }]}>
+        
       <Header
         onChangeTheme={handleTheme}
       />
 
-      <TodoInput addTask={handleAddTask} />
+      <TodoInput
+        addTask={handleAddTask}
+        isDark={isDark}
+      />
 
       <MyTasksList
         tasks={tasks}
         onPress={handleMarkTaskAsDone}
         onLongPress={handleRemoveTask}
+        isDark={isDark}
       />
-    </>
+    </View>
   )
 }
+
